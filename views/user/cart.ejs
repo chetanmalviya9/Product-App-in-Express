@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <%- include('../admin/_bootstrap.ejs')%>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.1/dist/jquery.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+
+</head>
+
+<body>
+    <div id="viewport">
+        <%- include('header.ejs')%>
+
+            <div class="container-fluid ">
+                <table class="table ">
+                    <thead>
+                        <tr>
+                            <th>S.no</th>
+                            <th>Image</th>
+                            <th>Name</th>
+                            <th>Price</th>
+                            <th>Description</th>
+                            <th>Quantity</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <%cartList.forEach((item,index)=>{%>
+                            <tr>
+                                <td>
+                                    <%=index+1%>
+                                </td>
+                                <td>
+                                    <img src="/images/<%=item.productImage%>" width="100px" height="100px" />
+                                </td>
+                                <td>
+                                    <%=item.productName%>
+                                </td>
+                                <td id="price<%=index%>">
+                                    <%=item.productPrice%>
+                                </td>
+                                <td>
+                                    <%=item.productDescription%>
+                                </td>
+                                <td>
+                                    <button onclick="increQty('<%=index%>')" class="btn btn-sm btn-success">+</button>
+                                    <span id="quantity<%=index%>" class="btn">1</span>
+                                    <button onclick="decreQty('<%=index%>')" class="btn btn-sm btn-info">-</button>
+                                </td>
+                                <td>
+                                    <a onclick="return confirm('Are you sure ?')" href="/cart/deleteProduct/<%=index%>">
+                                        <button class="btn btn-outline-danger">Delete</button>
+                                    </a>
+                                </td>
+                            </tr>
+                            <%})%>
+                    </tbody>
+                </table>
+                <div class="row p-3">
+                    <div class="col-md-8 bg-danger">
+                        <center><span class="text-white">Total</span></center>
+                    </div>
+                    <div class="col-md-4 bg-primary">
+                        <center>₹<span id="total" class="text-white"></span></center>
+                    </div>
+                </div>
+                <div class="row text-center">
+                    <div class="col-md-12">
+                        <button data-toggle="modal" data-target="#myModal" class="btn btn-outline-success">Buy</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal" id="myModal">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+              
+                    <!-- Modal Header -->
+                    <div class="modal-header">
+                      <h4 class="modal-title">Delivery Details</h4>
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+              
+                    <!-- Modal body -->
+                    <div class="modal-body">
+                       <div class="form-group">
+                           <label>Name</label>
+                           <input id="name" type="text" class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                          <label>Mobile number</label>
+                          <input id="mobileNo" type="text" class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                          <label>Delivery address</label>
+                          <textarea id="address" class="form-control" rows="3"></textarea>
+                        </div>
+                        
+                    </div>
+              
+                    <!-- Modal footer -->
+                    <div class="modal-footer">
+                      <button onclick="placeOrder()" type="button" class="btn btn-danger" data-dismiss="modal">Confirm Order</button>
+                    </div>
+              
+                  </div>
+                </div>
+              </div>
+  
+    </div>
+    <script>
+        function increQty(index) {
+            let cartItem = localStorage.getItem('cartItems');
+            cartItem = JSON.parse(cartItem);
+            let item = cartItem.items[index];
+            item.quantity++;
+            let totalPrice = item.productPrice * item.quantity;
+            cartItem.items[index] = item;
+            document.getElementById("quantity" + index).innerHTML = "" + item.quantity;
+            document.getElementById("price" + index).innerHTML = "" + (totalPrice);
+            localStorage.setItem("cartItems", JSON.stringify(cartItem));
+            let total = 0;
+            for (let i = 0; i < cartItem.items.length; i++) {
+                total = total + (cartItem.items[i].quantity * cartItem.items[i].productPrice);
+            }
+            // console.log("hii")
+            document.getElementById("total").innerHTML = "" + total;
+        }
+
+        function decreQty(index) {
+            let cartItem = localStorage.getItem('cartItems');
+            cartItem = JSON.parse(cartItem);
+            let item = cartItem.items[index];
+            if (item.quantity > 1)
+                item.quantity--;
+            let totalPrice = item.productPrice * item.quantity;
+            cartItem.items[index] = item;
+            document.getElementById("quantity" + index).innerHTML = "" + item.quantity;
+            document.getElementById("price" + index).innerHTML = "" + (totalPrice);
+            localStorage.setItem("cartItems", JSON.stringify(cartItem));
+            let total = 0;
+            for (let i = 0; i < cartItem.items.length; i++) {
+                total = total + (cartItem.items[i].quantity * cartItem.items[i].productPrice);
+            }
+            // console.log("hii")
+            document.getElementById("total").innerHTML = "" + total;
+        }
+
+        window.onload = data = () => {
+            console.log("window load")
+            let xhttp = new XMLHttpRequest();
+            xhttp.open("GET", "/cart/cartData", true);
+            xhttp.send();
+            xhttp.onreadystatechange = function () {
+                if (xhttp.readyState == 4) {
+                    let data = xhttp.responseText;
+                    data = JSON.parse(data);
+                    localStorage.setItem("cartItems", JSON.stringify(data));
+                    let total = 0;
+                    for (i = 0; i < data.items.length; i++) {
+                        total = total + data.items[i].productPrice;
+                        document.getElementById("total").innerHTML = "" + total;
+                    }
+                }
+            }
+        }
+        function placeOrder(){          
+            let cartItems = localStorage.getItem("cartItems");
+            cartItems = JSON.parse(cartItems);
+          let name = document.getElementById("name").value;
+          let mobileNo = document.getElementById("mobileNo").value;
+          let address = document.getElementById("address").value;
+          
+          let items = cartItems.items;
+          let total = document.getElementById("total").innerHTML;
+          let xhttp  =new XMLHttpRequest();
+          xhttp.open("POST","/order/addOrder",true);
+          xhttp.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+          xhttp.send("name="+name+"&mobileNo="+mobileNo+"&deliveryAddress="+address+"&total="+total+"&items="+JSON.stringify(items));
+          xhttp.onreadystatechange = function(){
+            if(xhttp.readyState == 4){
+              alert(JSON.parse(xhttp.responseText).message);
+            }
+          }
+        }
+    </script>
+</body>
+
+</html>

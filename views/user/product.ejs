@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Dashboard</title>
+    <%- include('../admin/_bootstrap.ejs')%>
+</head>
+
+<body>
+    <%- include('header.ejs')%>
+        <div class="container-fluid">
+
+            <div class="container">
+                <main class="container" style="margin-left:15% ;margin-top:5% ;">
+                    <div class="row">
+                        <%productList.forEach(product=>{%>
+                            <div class="card ml-3" style="width:270px">
+                                <img class="card-img-top" src="/images/<%=product.productImage%>" alt="Card image"
+                                    style="width:60%; height: 170px;">
+                                <div class="card-body">
+                                    <h4 class="card-title">
+                                        <%=product.productName%> <a href="#" class="btn text-right">View more</a>
+                                    </h4>
+                                    <a onclick="addToCart('<%=product._id%>')"
+                                        class="btn btn-outline-primary text-left">Add To Cart</a>
+                                    <a href="#" class="btn btn-primary text-left">Buy now</a>
+                                </div>
+                            </div>
+                            <%})%>
+                    </div>
+                </main>
+            </div>
+        </div>
+        <script>
+            function addToCart(Id) {
+                const xhttp = new XMLHttpRequest();
+                xhttp.open('GET', "/cart/addToCart/" + Id, true);
+                xhttp.send();
+                xhttp.onreadystatechange = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        let data = xhttp.responseText;
+                        data = JSON.parse(data);
+                        alert(data.message)
+                    }
+                }
+            }
+        </script>
+</body>
+
+</html>

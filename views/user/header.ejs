@@ -1,0 +1,63 @@
+<div id="sidebar">
+  <header>
+    <a href="#">Laptop Shop</a>
+  </header>
+  <%if(!currentUser){%>
+    <h1 class="text-center">User Dashboard</h1>
+    <%}else{%>
+      <h2 class="text-center">Welcome </h2>
+      <h3 class="text-center"><%=currentUser.userEmail%>
+      </h3>
+      <%}%>
+        <ul class="nav">
+          <%if(!currentUser){%>
+            <li>
+              <a href="#">
+                Sign in
+              </a>
+            </li>
+
+            <li>
+              <a href="#">
+                Sign up
+              </a>
+            </li>
+            <li>
+              <a href="/">
+                back
+              </a>
+            </li>
+            <%}else{%>
+
+              <%categoryList.forEach(category=>{%>
+                <li>
+                  <a href="/product/<%=category._id%>">
+                    <%=category.categoryName%>
+                  </a>
+                </li>
+                <%})%>
+                  <li>
+                    <a href="/user/signout">
+                      Sign Out
+                    </a>
+                  </li>
+        </ul>
+        <%}%>
+</div>
+<%if(currentUser){%>
+  <div id="content">
+    <nav class="navbar navbar-default">
+      <div class="container-fluid">
+        <ul class="nav navbar-nav navbar-right">
+          <li class="tm-nav-item">
+            <a href="/cart/" class="tm-nav-link">
+              <button type="button" class="btn btn-default btn-sm">
+                <span class="glyphicon glyphicon-shopping-cart"></span> Cart
+              </button>
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+  <%}%>

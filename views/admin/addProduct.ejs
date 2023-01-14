@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        const removeAlert = () => {
+            const alert = document.getElementById("message")
+            alert.remove();
+        }
+    </script>
+    <%-include('_bootstrap.ejs')%>
+</head>
+
+<body>
+    <div id="viewport">
+        <!-- Sidebar -->
+        <%-include('header.ejs')%>
+            <!-- Content -->
+            <div id="content">
+                <nav class="navbar navbar-default">
+                    <div class="container-fluid">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <a href="#"><i class="zmdi zmdi-notifications text-danger"></i>
+                                </a>
+                            </li>
+                            <li><a href="#">Test User</a></li>
+                        </ul>
+                    </div>
+                </nav>
+                <div class="container-fluid">
+                   
+                            <form action="/product/add" method="post"  enctype="multipart/form-data" >
+
+                                <div class="form-group">
+                                    <label>Category Name</label>
+                                    <div class="form-group">
+                                        <select class="form-control " name="categoryId">
+                                            <option value="">Select Category</option>
+                                            <% categoryList.forEach(category => { %>
+                                             
+                                                <option value="<%=category._id%>"><%=category.categoryName%></option>
+                                            <% }) %>
+                                        </select>
+                                    </div>
+                                    <label>Product Name</label>
+                                    <div class="form-group">
+                                        <input class="form-control " name="productName" type="text">
+                                    </div>
+                                    <label>Product Price</label>
+                                    <div class="form-group">
+                                        <input class="form-control " name="productPrice" type="text">
+                                    </div>
+                                    <label>Product Quantity</label>
+                                    <div class="form-group">
+                                        <input class="form-control " name="productQuantity" type="text">
+                                    </div>
+                                    <label>Discription</label>
+                                    <div class="form-group">
+                                        <textarea class="form-control " name="productDescription" rows="4"></textarea>
+                                    </div>
+                                    <label>Image</label>
+                                    <div class="form-group">
+                                        <input  type="file" class="form-control " name="productImage">
+                                    </div>
+
+                                    <div class="col-md-6 col-sm-6 col-lg-6">
+                                        <button class="btn btn-success " type="submit"> Save </button>
+                                    </div>
+                                </div>
+                            </form>
+                </div>
+            </div>
+    </div>
+</body>
+
+</html>

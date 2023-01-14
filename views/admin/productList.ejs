@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laptop Shop</title>
+
+    <%-include('_bootstrap.ejs')%>
+</head>
+
+<body>
+    <div id="viewport">
+        <!-- Sidebar -->
+        <%-include('header.ejs')%>
+            <!-- Content -->
+            <div id="content">
+                <nav class="navbar navbar-default">
+                    <div class="container-fluid">
+                        <ul class="nav navbar-nav navbar-right">
+                            <li>
+                                <a href="#"><i class="zmdi zmdi-notifications text-danger"></i>
+                                </a>
+                            </li>
+                            <li><a href="#">Test User</a></li>
+                        </ul>
+                    </div>
+                </nav>
+                <div class="container-fluid">
+                    <table class="table">
+                        <thead>
+                            <th>
+                                S.no.
+                            </th>
+                            <th>
+                                Image
+                            </th>
+                            <th>
+                                Category Name
+                            </th>
+                            <th>
+                                Product Name
+                            </th>
+                            <th>
+                                Quantity
+                            </th>
+                            <th>
+                                Price
+                            </th>
+                            <th>
+                                Description
+                            </th>
+                            <th>
+                                Edit
+                            </th>
+                            <th>
+                                Delete
+                            </th>
+                        </thead>
+                        <tbody>
+                            
+                            <%result.forEach((product,index)=>{%>
+                            <tr>
+                                <td style="margin-top: 5%;"><%=index+1%></td>
+                                <td>
+                                    <img src="/images/<%=product.productImage%>" style="width: 90px; height: 90px; border-radius: 50%;"/>
+                                </td>
+                                <td style="margin-top: 15%;"><%=product.categoryId.categoryName%></td>
+                                <td style="margin-top: 5%;"><%=product.productName%></td>
+                                <td style="margin-top: 5%;"><%=product.productQuantity%></td>
+                                <td style="margin-top: 5%;"><%=product.productPrice%></td>
+                                <td style="margin-top: 5%;"><%=product.productDescription%></td>
+                                
+                                <td>
+                                    <a href="/product/edit/<%=product._id  %>"
+                                        <button class="btn btn-warning">Edit</button>
+                                    </a>
+                                </td>
+                                <td>
+                                    <a href="/product/delete/<%=product._id %>"
+                                        <button onclick="return confirm('Are you sure?')" class="btn btn-danger">Delete</button>
+                                    </a>
+                                </td>
+                            </tr>
+                                <%}) %>
+                        
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+    </div>
+</body>
+
+</html>
